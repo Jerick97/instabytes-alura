@@ -1,3 +1,5 @@
+import "dotenv/config";
+import { ObjectId } from "mongodb";
 import conectarAoBanco from "../config/dbConfig.js";
 const conexion = await conectarAoBanco(process.env.MONGO_URI);
 
@@ -23,4 +25,18 @@ export async function getTodosPosts() {
  */
 export async function criarPost(novoPost) {
 	return collection.insertOne(novoPost);
+}
+
+/**
+ * Actualiza un post existente en la base de datos.
+ *
+ * @param {String} id El identificador del post a actualizar.
+ * @param {Object} novoPost El objeto con los nuevos datos del post.
+ *
+ * @return {Promise} Promesa que se resuelve con el resultado de la operación
+ *                   de actualización del post.
+ */
+export async function actualizarPost(id, novoPost) {
+	const objID = ObjectId.createFromHexString(id);
+	return collection.updateOne({ _id: new ObjectId(objID) }, { $set: novoPost });
 }
